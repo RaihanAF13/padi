@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Semprot Padi</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hijau: #2d6a4f;
+    --hijau-muda: #52b788;
+    --hijau-terang: #95d5b2;
+    --kuning: #f4a261;
+    --kuning-muda: #ffd166;
+    --coklat: #6d4c27;
+    --krem: #fefae0;
+    --putih: #ffffff;
+    --teks-gelap: #1b3a2d;
+    --abu: #e9f5ee;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--krem);
+    color: var(--teks-gelap);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === HEADER === */
+  header {
+    background: linear-gradient(135deg, var(--hijau) 0%, #1b4332 60%, #081c15 100%);
+    padding: 2rem 1.5rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 50%, rgba(82,183,136,0.15) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(149,213,178,0.1) 0%, transparent 40%);
+  }
+
+  .padi-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    animation: sway 3s ease-in-out infinite;
+  }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--putih);
+    line-height: 1.2;
+    position: relative;
+  }
+
+  header p {
+    color: var(--hijau-terang);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+
+  /* === KALKULATOR LUAS === */
+  .kalkulator {
+    background: var(--putih);
+    margin: -1.5rem 1rem 1.5rem;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 8px 30px rgba(45,106,79,0.15);
+    position: relative;
+    z-index: 10;
+  }
+
+  .kalkulator h2 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--hijau);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .input-group {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--coklat);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 2px solid var(--hijau-terang);
+    border-radius: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--teks-gelap);
+    background: var(--abu);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .input-group input:focus {
+    border-color: var(--hijau);
+    background: var(--putih);
+  }
+
+  .btn-hitung {
+    padding: 0.65rem 1.2rem;
+    background: var(--hijau);
+    color: var(--putih);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn-hitung:active { transform: scale(0.97); }
+  .btn-hitung:hover { background: var(--hijau-muda); }
+
+  .hasil-hitung {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, var(--hijau) 0%, var(--hijau-muda) 100%);
+    border-radius: 10px;
+    color: var(--putih);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* === TABS HST === */
+  .section-label {
+    padding: 0 1rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--hijau);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.6rem;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 1rem;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 2px solid var(--hijau-terang);
+    background: var(--putih);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--hijau);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--hijau);
+    border-color: var(--hijau);
+    color: var(--putih);
+  }
+
+  /* === KARTU FASE === */
+  .kartu-fase {
+    margin: 0 1rem 1.5rem;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(45,106,79,0.12);
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+
+  .kartu-fase.aktif { display: block; }
+
+  .fase-header {
+    padding: 1.25rem 1.25rem 1rem;
+    color: var(--putih);
+  }
+
+  .fase-0 .fase-header { background: linear-gradient(135deg, #2d6a4f, #40916c); }
+  .fase-1 .fase-header { background: linear-gradient(135deg, #1d6a8a, #2196a0); }
+  .fase-2 .fase-header { background: linear-gradient(135deg, #7b4f12, #c47c2e); }
+  .fase-3 .fase-header { background: linear-gradient(135deg, #6b3fa0, #9b59b6); }
+
+  .fase-header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .fase-header h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    line-height: 1.1;
+  }
+
+  .fase-header .fokus {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-top: 0.25rem;
+  }
+
+  .fase-body {
+    background: var(--putih);
+    padding: 1.25rem;
+  }
+
+  /* Info rows */
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--abu);
+  }
+
+  .info-item:last-child { border-bottom: none; }
+
+  .info-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .info-content {}
+  .info-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--hijau);
+    margin-bottom: 0.15rem;
+  }
+
+  .info-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--teks-gelap);
+  }
+
+  .info-value .highlight {
+    font-family: 'DM Mono', monospace;
+    background: var(--abu);
+    padding: 0.1rem 0.45rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--hijau);
+    font-weight: 700;
+  }
+
+  /* Dosis dinamis */
+  .dosis-dinamis {
+    background: linear-gradient(135deg, var(--abu) 0%, #d8f3dc 100%);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    border-left: 4px solid var(--hijau-muda);
+  }
+
+  .dosis-dinamis .label-dosis {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--coklat);
+    letter-spacing: 0.07em;
+  }
+
+  .dosis-dinamis .nilai-dosis {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--hijau);
+    margin-top: 0.15rem;
+  }
+
+  /* === CATATAN PENTING === */
+  .catatan-section {
+    margin: 0 1rem 1.5rem;
+  }
+
+  .catatan-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--hijau);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .catatan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .catatan-item {
+    background: var(--putih);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    box-shadow: 0 2px 10px rgba(45,106,79,0.07);
+    border-left: 4px solid var(--hijau-terang);
+  }
+
+  .catatan-item .ci-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .catatan-item p { font-size: 0.88rem; line-height: 1.5; color: var(--teks-gelap); }
+
+  /* === ESTIMASI BIAYA === */
+  .biaya-section {
+    margin: 0 1rem 2rem;
+    background: linear-gradient(135deg, var(--kuning-muda), var(--kuning));
+    border-radius: 16px;
+    padding: 1.25rem;
+  }
+
+  .biaya-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--coklat);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .biaya-range {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--coklat);
+  }
+
+  .biaya-section p {
+    font-size: 0.82rem;
+    color: var(--coklat);
+    opacity: 0.8;
+    margin-top: 0.3rem;
+  }
+
+  /* === FOOTER === */
+  footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.78rem;
+    color: var(--hijau);
+    opacity: 0.6;
+    border-top: 1px solid var(--hijau-terang);
+  }
+
+  /* === Penanda hari ini === */
+  .hari-ini {
+    display: none;
+    margin: 0 1rem 1rem;
+    background: var(--hijau);
+    color: var(--putih);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="padi-icon">🌾</span>
+  <h1>Panduan Semprot Padi</h1>
+  <p>Luas Sawah 1.892 m² · Dosis & Jadwal Terukur</p>
+</header>
+
+<!-- KALKULATOR -->
+<div class="kalkulator">
+  <h2>🧮 Kalkulator Dosis Lahan Kamu</h2>
+  <div class="input-row">
+    <div class="input-group">
+      <label>Luas Sawah (m²)</label>
+      <input type="number" id="luasInput" value="1892" placeholder="1892">
+    </div>
+    <div class="input-group">
+      <label>Umur Padi (HST)</label>
+      <input type="number" id="hstInput" placeholder="cth: 25">
+    </div>
+    <button class="btn-hitung" onclick="hitung()">Hitung</button>
+  </div>
+  <div class="hasil-hitung" id="hasilHitung"></div>
+</div>
+
+<!-- PENANDA FASE -->
+<div class="hari-ini" id="penandaFase">
+  <span>📍</span>
+  <span id="penandaFaseTeks"></span>
+</div>
+
+<!-- TABS -->
+<p class="section-label">📋 Jadwal per Fase</p>
+<div class="tabs">
+  <button class="tab-btn active" onclick="gantiFase(0)">7–15 HST</button>
+  <button class="tab-btn" onclick="gantiFase(1)">20–30 HST</button>
+  <button class="tab-btn" onclick="gantiFase(2)">45–55 HST</button>
+  <button class="tab-btn" onclick="gantiFase(3)">55–65 HST</button>
+</div>
+
+<!-- KARTU FASE -->
+<div class="kartu-fase fase-0 aktif" id="kartu-0">
+  <div class="fase-header">
+    <span class="badge">Fase 1</span>
+    <h3>7–15 HST</h3>
+    <p class="fokus">Fokus: Akar & Anakan</p>
+  </div>
+  <div class="fase-body">
+    <div class="info-item">
+      <span class="info-icon">🪣</span>
+      <div class="info-content">
+        <div class="info-label">Campuran per Tangki 16L</div>
+        <div class="info-value"><span class="highlight">POC Booster 30–40 ml</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">📦</span>
+      <div class="info-content">
+        <div class="info-label">Kebutuhan Total (1.892 m²)</div>
+        <div class="info-value"><span class="highlight">±250–300 ml</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">🎯</span>
+      <div class="info-content">
+        <div class="info-label">Tujuan</div>
+        <div class="info-value">Merangsang pertumbuhan akar kuat dan memperbanyak anakan produktif</div>
+      </div>
+    </div>
+    <div class="dosis-dinamis" id="dinamis-0" style="display:none">
+      <div class="label-dosis">📐 Dosis untuk lahan kamu</div>
+      <div class="nilai-dosis" id="nilai-0">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="kartu-fase fase-1" id="kartu-1">
+  <div class="fase-header">
+    <span class="badge">Fase 2</span>
+    <h3>20–30 HST</h3>
+    <p class="fokus">Fokus: Daun & Batang</p>
+  </div>
+  <div class="fase-body">
+    <div class="info-item">
+      <span class="info-icon">🪣</span>
+      <div class="info-content">
+        <div class="info-label">Campuran per Tangki 16L</div>
+        <div class="info-value"><span class="highlight">NPK Daun 20–30 gram</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">📦</span>
+      <div class="info-content">
+        <div class="info-label">Kebutuhan Total (1.892 m²)</div>
+        <div class="info-value"><span class="highlight">±200 gram</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">🎯</span>
+      <div class="info-content">
+        <div class="info-label">Tujuan</div>
+        <div class="info-value">Memperkuat batang padi dan mendorong pertumbuhan daun yang sehat</div>
+      </div>
+    </div>
+    <div class="dosis-dinamis" id="dinamis-1" style="display:none">
+      <div class="label-dosis">📐 Dosis untuk lahan kamu</div>
+      <div class="nilai-dosis" id="nilai-1">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="kartu-fase fase-2" id="kartu-2">
+  <div class="fase-header">
+    <span class="badge">Fase 3</span>
+    <h3>45–55 HST</h3>
+    <p class="fokus">Fokus: Persiapan Malai</p>
+  </div>
+  <div class="fase-body">
+    <div class="info-item">
+      <span class="info-icon">🪣</span>
+      <div class="info-content">
+        <div class="info-label">Campuran per Tangki 16L</div>
+        <div class="info-value"><span class="highlight">MKP 25 gram + perekat</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">📦</span>
+      <div class="info-content">
+        <div class="info-label">Kebutuhan Total (1.892 m²)</div>
+        <div class="info-value"><span class="highlight">±180 gram MKP</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">🎯</span>
+      <div class="info-content">
+        <div class="info-label">Tujuan</div>
+        <div class="info-value">Mempersiapkan pembungaan malai, kurangi urea agar bulir tidak kosong</div>
+      </div>
+    </div>
+    <div class="dosis-dinamis" id="dinamis-2" style="display:none">
+      <div class="label-dosis">📐 Dosis untuk lahan kamu</div>
+      <div class="nilai-dosis" id="nilai-2">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="kartu-fase fase-3" id="kartu-3">
+  <div class="fase-header">
+    <span class="badge">Fase 4</span>
+    <h3>55–65 HST</h3>
+    <p class="fokus">Fokus: Isi Bulir</p>
+  </div>
+  <div class="fase-body">
+    <div class="info-item">
+      <span class="info-icon">🪣</span>
+      <div class="info-content">
+        <div class="info-label">Campuran per Tangki 16L</div>
+        <div class="info-value"><span class="highlight">Booster Bulir 30 ml</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">📦</span>
+      <div class="info-content">
+        <div class="info-label">Kebutuhan Total (1.892 m²)</div>
+        <div class="info-value"><span class="highlight">±250 ml</span></div>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">🎯</span>
+      <div class="info-content">
+        <div class="info-label">Tujuan</div>
+        <div class="info-value">Memaksimalkan pengisian bulir agar padat dan bernas, siap panen</div>
+      </div>
+    </div>
+    <div class="dosis-dinamis" id="dinamis-3" style="display:none">
+      <div class="label-dosis">📐 Dosis untuk lahan kamu</div>
+      <div class="nilai-dosis" id="nilai-3">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- CATATAN PENTING -->
+<div class="catatan-section">
+  <h2>⚠️ Catatan Penting</h2>
+  <div class="catatan-list">
+    <div class="catatan-item">
+      <span class="ci-icon">☀️</span>
+      <p>Jangan semprot saat <strong>matahari terik</strong>. Waktu terbaik: <strong>pagi atau sore</strong> hari.</p>
+    </div>
+    <div class="catatan-item">
+      <span class="ci-icon">🌾</span>
+      <p>Kurangi penggunaan <strong>urea berlebihan</strong> menjelang bunting agar bulir tidak kosong.</p>
+    </div>
+    <div class="catatan-item">
+      <span class="ci-icon">💧</span>
+      <p>Pastikan <strong>air sawah stabil</strong> dan tidak terlalu dalam selama masa penyemprotan.</p>
+    </div>
+    <div class="catatan-item">
+      <span class="ci-icon">🐛</span>
+      <p>Jika ada <strong>hama atau jamur</strong>, tangani terpisah agar booster tidak sia-sia.</p>
+    </div>
+    <div class="catatan-item">
+      <span class="ci-icon">📈</span>
+      <p>Kenaikan hasil realistis sekitar <strong>10–30%</strong> jika pengelolaan dilakukan dengan baik.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ESTIMASI BIAYA -->
+<div class="biaya-section">
+  <h2>💰 Estimasi Biaya Semprot</h2>
+  <div class="biaya-range">Rp80.000 – Rp250.000</div>
+  <p>untuk luas 1.892 m² · tergantung merek pupuk dan jumlah aplikasi</p>
+</div>
+
+<footer>🌾 Panduan Semprot Padi · Data berdasarkan dokumen resmi</footer>
+
+<script>
+  const faseData = [
+    {
+      bahan: "POC Booster",
+      satuan: "ml",
+      minPer16: 30, maxPer16: 40,
+      totalMin: 250, totalMax: 300,
+    },
+    {
+      bahan: "NPK Daun",
+      satuan: "gram",
+      minPer16: 20, maxPer16: 30,
+      totalMin: 200, totalMax: 200,
+    },
+    {
+      bahan: "MKP",
+      satuan: "gram",
+      minPer16: 25, maxPer16: 25,
+      totalMin: 180, totalMax: 180,
+    },
+    {
+      bahan: "Booster Bulir",
+      satuan: "ml",
+      minPer16: 30, maxPer16: 30,
+      totalMin: 250, totalMax: 250,
+    }
+  ];
+
+  let faseTerpilih = 0;
+
+  function gantiFase(i) {
+    document.querySelectorAll('.kartu-fase').forEach(k => k.classList.remove('aktif'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('kartu-' + i).classList.add('aktif');
+    document.querySelectorAll('.tab-btn')[i].classList.add('active');
+    faseTerpilih = i;
+  }
+
+  function hitung() {
+    const luas = parseFloat(document.getElementById('luasInput').value) || 1892;
+    const hst = parseFloat(document.getElementById('hstInput').value);
+    const rasio = luas / 1892;
+
+    // Tentukan fase otomatis dari HST
+    let faseAktif = -1;
+    if (hst >= 7 && hst <= 15) faseAktif = 0;
+    else if (hst >= 20 && hst <= 30) faseAktif = 1;
+    else if (hst >= 45 && hst <= 55) faseAktif = 2;
+    else if (hst >= 55 && hst <= 65) faseAktif = 3;
+
+    // Tampilkan penanda fase
+    const penanda = document.getElementById('penandaFase');
+    const penandaTeks = document.getElementById('penandaFaseTeks');
+    const namaFase = ['7–15 HST (Akar & Anakan)','20–30 HST (Daun & Batang)','45–55 HST (Persiapan Malai)','55–65 HST (Isi Bulir)'];
+
+    if (faseAktif >= 0) {
+      penandaTeks.textContent = `Padi kamu (${hst} HST) masuk fase: ${namaFase[faseAktif]}`;
+      penanda.style.display = 'flex';
+      gantiFase(faseAktif);
+    } else if (hst) {
+      penandaTeks.textContent = `HST ${hst}: cek panduan terdekat di bawah`;
+      penanda.style.display = 'flex';
+    }
+
+    // Hitung semua fase
+    faseData.forEach((f, i) => {
+      const minTotal = Math.round(f.totalMin * rasio);
+      const maxTotal = Math.round(f.totalMax * rasio);
+      const el = document.getElementById('nilai-' + i);
+      const box = document.getElementById('dinamis-' + i);
+      const range = minTotal === maxTotal ? `±${minTotal} ${f.satuan}` : `±${minTotal}–${maxTotal} ${f.satuan}`;
+      el.textContent = `${f.bahan}: ${range} (lahan ${luas} m²)`;
+      box.style.display = 'block';
+    });
+
+    // Tampilkan hasil ringkas
+    const hasil = document.getElementById('hasilHitung');
+    const fase = faseAktif >= 0 ? faseData[faseAktif] : null;
+    if (fase) {
+      const min = Math.round(fase.totalMin * rasio);
+      const max = Math.round(fase.totalMax * rasio);
+      const range = min === max ? `±${min} ${fase.satuan}` : `±${min}–${max} ${fase.satuan}`;
+      hasil.innerHTML = `✅ Lahan <b>${luas} m²</b> · Fase saat ini (<b>${hst} HST</b>) butuh <b>${fase.bahan}: ${range}</b>`;
+    } else {
+      hasil.innerHTML = `✅ Dosis sudah dihitung ulang untuk lahan <b>${luas} m²</b>. Lihat tiap fase di bawah.`;
+    }
+    hasil.style.display = 'block';
+  }
+</script>
+</body>
+</html>
